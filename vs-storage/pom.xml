@@ -5,5 +5,5 @@
     <artifactId>videoserver-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>vs-vcs</artifactId>
+  <artifactId>vs-storage</artifactId>
 </project>

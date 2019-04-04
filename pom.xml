@@ -13,7 +13,7 @@
 
 	<modules>
 		<module>vs-core</module>
-		<module>vs-vcs</module>
+		<module>vs-storage</module>
 		<module>vs-persistence</module>
 		<module>vs-webapp</module>
 	</modules>

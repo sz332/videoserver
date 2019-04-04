@@ -9,8 +9,8 @@ public interface Library {
 
     void add(Videoclip clip);
 
-    List<Videoclip> list();
+    List<Videoclip> clips();
 
-    Videoclip retrieve(UUID videoClipId);
+    Videoclip clip(UUID videoClipId);
 
 }

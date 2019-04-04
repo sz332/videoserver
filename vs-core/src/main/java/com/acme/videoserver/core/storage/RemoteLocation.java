@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface RemoteLocation {
 
-    String name();
-    
-    String path();
-    
-    byte[] download();
-    
-    boolean hasChildren();
-    
-    List<RemoteLocation> children();
-    
+    String name() throws StorageAccessException;
+
+    String path() throws StorageAccessException;
+
+    byte[] download() throws StorageAccessException;
+
+    boolean hasChildren() throws StorageAccessException;
+
+    List<RemoteLocation> children() throws StorageAccessException;
+
 }

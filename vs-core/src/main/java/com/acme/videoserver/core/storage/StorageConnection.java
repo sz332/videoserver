@@ -2,8 +2,8 @@ package com.acme.videoserver.core.storage;
 
 public interface StorageConnection {
 
-    RemoteLocation root();
+    RemoteLocation root() throws StorageAccessException;
     
-    RemoteLocation resolve(String path);
+    RemoteLocation resolve(String path) throws StorageAccessException;
     
 }

@@ -77,11 +77,14 @@ public class SVNRemoteLocation implements RemoteLocation {
     public List<RemoteLocation> children() throws StorageAccessException {
 
         try {
-            ISVNDirEntry[] list = svnClient.getList(new SVNUrl(url), SVNRevision.HEAD, false);
+            
+            SVNUrl rootUrl = new SVNUrl(url);
+            
+            ISVNDirEntry[] list = svnClient.getList(rootUrl, SVNRevision.HEAD, false);
 
             return Arrays.asList(list)
                     .stream()
-                    .map(entry -> new SVNRemoteLocation(svnClient, entry.getPath()))
+                    .map(entry -> new SVNRemoteLocation(svnClient,rootUrl.appendPath(entry.getPath()).toString()))
                     .collect(Collectors.toList());
 
         } catch (MalformedURLException | SVNClientException e) {

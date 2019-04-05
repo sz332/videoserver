@@ -1,7 +1,9 @@
 package com.acme.videoserver.storage.filesystem;
 
 import java.io.File;
-import java.util.function.Consumer;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,7 +22,9 @@ public class FileSystemStorageTest {
 	@Test
 	public void testListFiles() throws StorageAccessException {
 
-		Storage storage = new FilesystemStorage(new File("E:/Temp/videos").toPath());
+		File fsRoot = getResourceRoot();
+
+		Storage storage = new FilesystemStorage(fsRoot.toPath());
 		Assert.assertNotNull(storage);
 
 		StorageConnection connection = storage.connect(USER, PASSWORD);
@@ -31,19 +35,35 @@ public class FileSystemStorageTest {
 
 		RemoteLocationWalker walker = new RemoteLocationWalker(root);
 
-		walker.walk(new Consumer<RemoteLocation>() {
+		walker.walk(remoteLocation -> {
+			try {
+				System.out.println(remoteLocation.name());
+				System.out.println(remoteLocation.path());
 
-			@Override
-			public void accept(RemoteLocation t) {
-				try {
-					System.out.println(t.name());
-					System.out.println(t.path());
-				} catch (StorageAccessException e) {
-					e.printStackTrace();
+				if ("xml".equals(remoteLocation.extension())) {
+					String s = new String(remoteLocation.download(), StandardCharsets.UTF_8);
+					System.out.println(s);
 				}
+
+			} catch (StorageAccessException e) {
+				e.printStackTrace();
 			}
 		});
 
+	}
+
+	private File getResourceRoot() {
+		URL url = getClass().getResource("/videos");
+
+		File f;
+
+		try {
+			f = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			f = new File(url.getPath());
+		}
+
+		return f;
 	}
 
 }

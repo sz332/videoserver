@@ -15,6 +15,11 @@ public class XmlMetadata implements DetailedMetadata {
 	public XmlMetadata(String text) {
 		this.xml = new XMLDocument(text);
 	}
+	
+	@Override
+	public String uuid() {
+		return xml.xpath("//metadata/uuid/text()").get(0);
+	}
 
 	@Override
 	public String title() {

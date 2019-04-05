@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 public interface Metadata {
 
+	String uuid();
+	
 	String title();
 
 	Image thumbnail();

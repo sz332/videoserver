@@ -20,6 +20,7 @@ public class XmlMetadataTest {
 
 		DetailedMetadata metadata = new XmlMetadata(text);
 		
+		assertEquals("af935b53-2877-4454-93a9-524650d6787b", metadata.uuid());
 		assertEquals("My title", metadata.title());
 		assertEquals("My description", metadata.description());
 		assertEquals(LocalDateTime.parse("2019-04-05T10:15"), metadata.recordingDateTime());

@@ -16,80 +16,85 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
 
 import com.acme.videoserver.core.storage.RemoteLocation;
 import com.acme.videoserver.core.storage.StorageAccessException;
+import com.acme.videoserver.storage.common.FileExtension;
 
 public class SVNRemoteLocation implements RemoteLocation {
 
-    private final ISVNClientAdapter svnClient;
-    private final String url;
+	private final ISVNClientAdapter svnClient;
+	private final String url;
 
-    public SVNRemoteLocation(ISVNClientAdapter svnClient, String url) {
-        this.svnClient = svnClient;
-        this.url = url;
-    }
+	public SVNRemoteLocation(ISVNClientAdapter svnClient, String url) {
+		this.svnClient = svnClient;
+		this.url = url;
+	}
 
-    @Override
-    public String name() throws StorageAccessException {
+	@Override
+	public String name() throws StorageAccessException {
 
-        try {
-            ISVNInfo info = svnClient.getInfo(new SVNUrl(url));
+		try {
+			ISVNInfo info = svnClient.getInfo(new SVNUrl(url));
 
-            return info.getFile()
-                    .getName();
+			return info.getFile().getName();
 
-        } catch (MalformedURLException | SVNClientException e) {
-            throw new StorageAccessException(e);
-        }
+		} catch (MalformedURLException | SVNClientException e) {
+			throw new StorageAccessException(e);
+		}
 
-    }
+	}
 
-    @Override
-    public String path() throws StorageAccessException {
-        return url;
-    }
+	@Override
+	public String extension() throws StorageAccessException {
+		return new FileExtension(name()).extension();
+	}
 
-    @Override
-    public byte[] download() throws StorageAccessException {
-        try {
-            InputStream is = svnClient.getContent(new SVNUrl(url), SVNRevision.HEAD);
+	@Override
+	public String path() throws StorageAccessException {
+		return url;
+	}
 
-            byte[] bytes = new byte[is.available()];
-            is.read(bytes);
+	@Override
+	public byte[] download() throws StorageAccessException {
+		try {
+			InputStream is = svnClient.getContent(new SVNUrl(url), SVNRevision.HEAD);
 
-            return bytes;
-        } catch (SVNClientException | IOException e) {
-            throw new StorageAccessException(e);
-        }
-    }
+			byte[] bytes = new byte[is.available()];
+			is.read(bytes);
 
-    @Override
-    public boolean hasChildren() throws StorageAccessException {
+			return bytes;
+		} catch (SVNClientException | IOException e) {
+			throw new StorageAccessException(e);
+		}
+	}
 
-        try {
-            ISVNDirEntry[] list = svnClient.getList(new SVNUrl(url), SVNRevision.HEAD, false);
-            return list.length > 0;
-        } catch (MalformedURLException | SVNClientException e) {
-            throw new StorageAccessException(e);
-        }
+	@Override
+	public boolean hasChildren() throws StorageAccessException {
 
-    }
+		try {
+			ISVNDirEntry[] list = svnClient.getList(new SVNUrl(url), SVNRevision.HEAD, false);
+			return list.length > 0;
+		} catch (MalformedURLException | SVNClientException e) {
+			throw new StorageAccessException(e);
+		}
 
-    @Override
-    public List<RemoteLocation> children() throws StorageAccessException {
+	}
 
-        try {
-            
-            SVNUrl rootUrl = new SVNUrl(url);
-            
-            ISVNDirEntry[] list = svnClient.getList(rootUrl, SVNRevision.HEAD, false);
+	@Override
+	public List<RemoteLocation> children() throws StorageAccessException {
 
-            return Arrays.asList(list)
-                    .stream()
-                    .map(entry -> new SVNRemoteLocation(svnClient,rootUrl.appendPath(entry.getPath()).toString()))
-                    .collect(Collectors.toList());
+		try {
 
-        } catch (MalformedURLException | SVNClientException e) {
-            throw new StorageAccessException(e);
-        }
-    }
+			SVNUrl rootUrl = new SVNUrl(url);
+
+			ISVNDirEntry[] list = svnClient.getList(rootUrl, SVNRevision.HEAD, false);
+
+			return Arrays.asList(list)
+					.stream()
+					.map(entry -> new SVNRemoteLocation(svnClient, rootUrl.appendPath(entry.getPath()).toString()))
+					.collect(Collectors.toList());
+
+		} catch (MalformedURLException | SVNClientException e) {
+			throw new StorageAccessException(e);
+		}
+	}
 
 }

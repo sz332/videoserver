@@ -5,6 +5,8 @@ import java.util.List;
 public interface RemoteLocation {
 
     String name() throws StorageAccessException;
+    
+    String extension() throws StorageAccessException;
 
     String path() throws StorageAccessException;
 

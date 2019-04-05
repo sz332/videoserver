@@ -1,4 +1,4 @@
-package com.acme.videoserver.core.videoclip;
+package com.acme.videoserver.core.library;
 
 import java.time.LocalDateTime;
 
@@ -11,4 +11,5 @@ public interface Metadata {
 	Image thumbnail();
 
 	LocalDateTime recordingDateTime();
+	
 }

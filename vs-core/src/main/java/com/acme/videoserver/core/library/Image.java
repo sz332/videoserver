@@ -1,4 +1,4 @@
-package com.acme.videoserver.core.videoclip;
+package com.acme.videoserver.core.library;
 
 public interface Image {
 

@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import org.cactoos.scalar.SolidScalar;
 import org.cactoos.scalar.UncheckedScalar;
 
-import com.acme.videoserver.core.videoclip.Image;
+import com.acme.videoserver.core.library.Image;
 
 public class Base64EncodedImage implements Image {
 

@@ -16,10 +16,24 @@
 		<module>vs-storage</module>
 		<module>vs-persistence</module>
 		<module>vs-webapp</module>
+		<module>vs-library</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
+
+			<dependency>
+				<groupId>org.cactoos</groupId>
+				<artifactId>cactoos</artifactId>
+				<version>0.40</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jcabi</groupId>
+				<artifactId>jcabi-xml</artifactId>
+				<version>1.0-SNAPSHOT</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -31,8 +45,14 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-jdk14</artifactId>
 				<version>1.7.26</version>
-				<scope>test</scope>
 			</dependency>
+
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.4.199</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>junit</groupId>
@@ -67,5 +87,18 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>bintray-subclipse-maven</id>
+			<name>bintray</name>
+			<url>http://dl.bintray.com/subclipse/maven</url>
+		</repository>
+		<repository>
+			<id>oss.sonatype.org</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
 
 </project>

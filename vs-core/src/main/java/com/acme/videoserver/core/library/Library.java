@@ -1,16 +1,13 @@
 package com.acme.videoserver.core.library;
 
 import java.util.List;
-import java.util.UUID;
-
-import com.acme.videoserver.core.videoclip.Videoclip;
 
 public interface Library {
 
-    void add(Videoclip clip);
+    void add(Videoclip clip) throws LibraryAccessException;
 
-    List<Videoclip> clips();
+    List<Videoclip> clips() throws LibraryAccessException;
 
-    Videoclip clip(UUID videoClipId);
+    Videoclip clip(String clipId) throws LibraryAccessException;
 
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import org.cactoos.text.TextOf;
 import org.junit.Test;
 
-import com.acme.videoserver.core.videoclip.DetailedMetadata;
+import com.acme.videoserver.core.library.DetailedMetadata;
 
 
 public class XmlMetadataTest {

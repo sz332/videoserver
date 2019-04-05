@@ -3,8 +3,8 @@ package com.acme.videoserver.storage.metadata;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.acme.videoserver.core.videoclip.DetailedMetadata;
-import com.acme.videoserver.core.videoclip.Image;
+import com.acme.videoserver.core.library.DetailedMetadata;
+import com.acme.videoserver.core.library.Image;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 

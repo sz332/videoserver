@@ -30,12 +30,11 @@ public class SQLLibrary implements Library {
 
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement("SELECT * FROM videoclip");
-				ResultSet rs = ps.executeQuery();) {
+				ResultSet rs = ps.executeQuery()) {
 
 			List<Videoclip> clips = new ArrayList<>();
 
 			while (rs.next()) {
-
 				clips.add(null);
 			}
 

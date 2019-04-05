@@ -1,26 +1,13 @@
 package com.acme.videoserver.core.videoclip;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-public interface Videoclip {
+public interface Videoclip extends Metadata {
 
-    UUID id();
+	UUID id();
 
-    String title();
+	DetailedMetadata metadata();
 
-    void title(String text);
-
-    Image thumbnail();
-
-    void thumbnail(Image image);
-
-    LocalDateTime recordingDate();
-
-    void recordingDate(LocalDateTime date);
-
-    VideoclipMetadata metadata();
-
-    void metadata(VideoclipMetadata meta);
+	void metadata(DetailedMetadata meta);
 
 }

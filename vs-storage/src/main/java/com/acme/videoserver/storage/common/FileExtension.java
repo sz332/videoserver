@@ -8,6 +8,7 @@ public class FileExtension {
 		this.fileName = fileName;
 	}
 
+	// https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java
 	public String extension() {
 		char ch;
 		int len;

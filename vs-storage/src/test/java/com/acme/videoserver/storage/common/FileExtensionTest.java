@@ -5,6 +5,7 @@ import org.junit.Test;
 
 public class FileExtensionTest {
 
+	// https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java
 	@Test
 	public void testGetExtension() {
 		assertEquals("", getExtension("C"));

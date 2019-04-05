@@ -70,6 +70,8 @@ public class SVNStorageTest {
 
         RemoteLocation remoteLocation = connect.root();
         Assert.assertNotNull(remoteLocation);
+        
+        
 
         List<RemoteLocation> children = remoteLocation.children();
         Assert.assertNotNull(children);

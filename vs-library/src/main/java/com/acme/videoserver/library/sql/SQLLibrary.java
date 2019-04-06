@@ -41,7 +41,7 @@ public class SQLLibrary implements Library {
 
 				ps.executeUpdate();
 
-				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO participants(videoclip_id, name) VALUES (?, ?)")) {
+				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO participant(videoclip_id, name) VALUES (?, ?)")) {
 
 					for (String participant : clip.participants()) {
 						psp.setString(1, clip.uuid());
@@ -52,7 +52,7 @@ public class SQLLibrary implements Library {
 					psp.executeBatch();
 				}
 
-				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO tags(videoclip_id, name) VALUES (?, ?)")) {
+				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO tag(videoclip_id, name) VALUES (?, ?)")) {
 
 					for (String tag : clip.tags()) {
 						psp.setString(1, clip.uuid());
@@ -70,7 +70,6 @@ public class SQLLibrary implements Library {
 		} catch (SQLException e) {
 			throw new LibraryAccessException(e);
 		}
-
 	}
 
 	@Override

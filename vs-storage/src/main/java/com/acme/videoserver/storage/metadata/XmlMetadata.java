@@ -27,7 +27,6 @@ public class XmlMetadata implements Metadata {
 		return xml.xpath("//metadata/title/text()").get(0);
 	}
 
-
 	@Override
 	public LocalDateTime recordingDateTime() {
 		return LocalDateTime.parse(xml.xpath("//metadata/recordingDateTime/text()").get(0));

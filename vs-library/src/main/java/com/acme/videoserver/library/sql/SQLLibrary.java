@@ -1,16 +1,19 @@
 package com.acme.videoserver.library.sql;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 import com.acme.videoserver.core.library.Library;
 import com.acme.videoserver.core.library.LibraryAccessException;
 import com.acme.videoserver.core.library.Videoclip;
-import com.acme.videoserver.library.common.DataSource;
+import com.acme.videoserver.library.common.ListStringOutcome;
+import com.jcabi.jdbc.JdbcSession;
 
 public class SQLLibrary implements Library {
 
@@ -22,23 +25,65 @@ public class SQLLibrary implements Library {
 
 	@Override
 	public void add(Videoclip clip) throws LibraryAccessException {
-		throw new UnsupportedOperationException();
+
+		try (Connection connection = dataSource.getConnection()) {
+
+			connection.setAutoCommit(false);
+
+			try (PreparedStatement ps = connection.prepareStatement(
+					"INSERT INTO videoclip(id, title, description, thumbnail, recordingDateTime) VALUES (?, ?, ?, ?, ?)")) {
+
+				ps.setString(1, clip.uuid());
+				ps.setString(2, clip.title());
+				ps.setString(3, clip.description());
+				ps.setString(4, "");
+				ps.setDate(5, Date.valueOf(clip.recordingDateTime().toLocalDate()));
+
+				ps.executeUpdate();
+
+				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO participants(videoclip_id, name) VALUES (?, ?)")) {
+
+					for (String participant : clip.participants()) {
+						psp.setString(1, clip.uuid());
+						psp.setString(2, participant);
+						psp.addBatch();
+					}
+
+					psp.executeBatch();
+				}
+
+				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO tags(videoclip_id, name) VALUES (?, ?)")) {
+
+					for (String tag : clip.tags()) {
+						psp.setString(1, clip.uuid());
+						psp.setString(2, tag);
+						psp.addBatch();
+					}
+
+					psp.executeBatch();
+				}
+
+			}
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			throw new LibraryAccessException(e);
+		}
+
 	}
 
 	@Override
 	public List<Videoclip> clips() throws LibraryAccessException {
 
-		try (Connection connection = dataSource.getConnection();
-				PreparedStatement ps = connection.prepareStatement("SELECT * FROM videoclip");
-				ResultSet rs = ps.executeQuery()) {
+		try {
 
-			List<Videoclip> clips = new ArrayList<>();
+			return new JdbcSession(dataSource).sql("SELECT id FROM videoclip")
+					.select(new ListStringOutcome())
+					.stream()
+					.map(s -> new SQLVideoclip(dataSource, s))
+					.collect(Collectors.toList());
 
-			while (rs.next()) {
-				clips.add(null);
-			}
-
-			return clips;
 		} catch (SQLException e) {
 			throw new LibraryAccessException(e);
 		}
@@ -47,7 +92,7 @@ public class SQLLibrary implements Library {
 
 	@Override
 	public Videoclip clip(String clipId) throws LibraryAccessException {
-		return null;
+		return new SQLVideoclip(dataSource, clipId);
 	}
 
 }

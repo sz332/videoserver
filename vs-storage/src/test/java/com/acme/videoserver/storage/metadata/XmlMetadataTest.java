@@ -1,6 +1,7 @@
 package com.acme.videoserver.storage.metadata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 import org.cactoos.text.TextOf;
 import org.junit.Test;
 
-import com.acme.videoserver.core.library.DetailedMetadata;
+import com.acme.videoserver.core.library.Metadata;
 
 
 public class XmlMetadataTest {
@@ -18,7 +19,7 @@ public class XmlMetadataTest {
 		
 		String text = new TextOf(getClass().getResourceAsStream("/metadata.xml")).asString();
 
-		DetailedMetadata metadata = new XmlMetadata(text);
+		Metadata metadata = new XmlMetadata(text);
 		
 		assertEquals("af935b53-2877-4454-93a9-524650d6787b", metadata.uuid());
 		assertEquals("My title", metadata.title());

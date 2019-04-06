@@ -1,4 +1,4 @@
-package com.acme.videoserver.storage.metadata;
+package com.acme.videoserver.core.image;
 
 import java.util.Base64;
 import java.util.regex.Matcher;

@@ -1,6 +1,6 @@
 package com.acme.videoserver.library.common;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface Cache<K, V> {
 
@@ -10,6 +10,6 @@ public interface Cache<K, V> {
 
 	V get(K key);
 	
-	Collection<V> values();
+	List<V> values();
 
 }

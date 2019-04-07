@@ -1,6 +1,6 @@
 package com.acme.videoserver.library.common;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.acme.videoserver.core.library.Library;
 import com.acme.videoserver.core.library.LibraryAccessException;
@@ -35,7 +35,7 @@ public class CachedLibrary implements Library {
 	}
 
 	@Override
-	public synchronized Collection<Videoclip> clips() throws LibraryAccessException {
+	public synchronized List<Videoclip> clips() throws LibraryAccessException {
 
 		if (!allDataReceived) {
 			library.clips().stream().forEach(clip -> cache.put(clip.uuid(), new CachedVideoclip(clip)));

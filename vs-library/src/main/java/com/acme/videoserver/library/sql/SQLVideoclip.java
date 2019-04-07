@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -13,6 +12,7 @@ import javax.sql.DataSource;
 import com.acme.videoserver.core.image.Base64EncodedImage;
 import com.acme.videoserver.core.library.Image;
 import com.acme.videoserver.core.library.Videoclip;
+import com.acme.videoserver.library.common.DataAccessException;
 import com.acme.videoserver.library.common.ListStringOutcome;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.Outcome;
@@ -41,7 +41,7 @@ public class SQLVideoclip implements Videoclip {
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 		} catch (SQLException e) {
-			return null;
+			throw new DataAccessException(e);
 		}
 	}
 
@@ -52,7 +52,7 @@ public class SQLVideoclip implements Videoclip {
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 		} catch (SQLException e) {
-			return null;
+			throw new DataAccessException(e);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class SQLVideoclip implements Videoclip {
 
 			return new Base64EncodedImage(text);
 		} catch (SQLException e) {
-			return null;
+			throw new DataAccessException(e);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class SQLVideoclip implements Videoclip {
 
 			return timestamp.toInstant();
 		} catch (SQLException e) {
-			return null;
+			throw new DataAccessException(e);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class SQLVideoclip implements Videoclip {
 					.set(uuid)
 					.select(new ListStringOutcome());
 		} catch (SQLException e) {
-			return Collections.emptyList();
+			throw new DataAccessException(e);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class SQLVideoclip implements Videoclip {
 					.set(uuid)
 					.select(new ListStringOutcome());
 		} catch (SQLException e) {
-			return Collections.emptyList();
+			throw new DataAccessException(e);
 		}
 	}
 

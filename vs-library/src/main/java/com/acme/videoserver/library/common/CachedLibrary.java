@@ -8,11 +8,12 @@ import com.acme.videoserver.core.library.Videoclip;
 
 public class CachedLibrary implements Library {
 
-	private boolean allDataReceived = false;
-
 	private final Library library;
 	private final Cache<String, Videoclip> cache;
 
+	// OOPS this makes me mutable
+	private boolean allDataReceived = false;
+	
 	public CachedLibrary(Library library) {
 		this.library = library;
 		this.cache = new StandardCache<String, Videoclip>();
@@ -37,6 +38,12 @@ public class CachedLibrary implements Library {
 	@Override
 	public synchronized List<Videoclip> clips() throws LibraryAccessException {
 
+		// how to remove the allDataReceived:
+		//	create a function which returns a function
+		//  this function will execute the library.clips().stream()
+		//  and return a function which executes cache.values()
+		//  then make it sticky
+		
 		if (!allDataReceived) {
 			library.clips().stream().forEach(clip -> cache.put(clip.uuid(), new CachedVideoclip(clip)));
 			allDataReceived = true;

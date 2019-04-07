@@ -46,7 +46,8 @@ public class SQLLibraryTest {
 		Assert.assertEquals("e817cbe5-e2be-44fb-9858-a6cab54ee03e", clip.uuid());
 		Assert.assertEquals("First video", clip.title());
 		Assert.assertEquals("Descr1", clip.description());
-		//Assert.assertEquals(null, clip.thumbnail());
+		Assert.assertEquals("image/jpeg", clip.thumbnail().mimeType());
+		Assert.assertThat(clip.thumbnail().data().length, is(1026) );		
 		Assert.assertEquals(Instant.parse("2019-01-15T18:01:00.Z"), clip.recordingDateTime());
 		
 		List<String> participants = clip.participants();

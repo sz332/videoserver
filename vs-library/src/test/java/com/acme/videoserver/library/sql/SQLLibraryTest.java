@@ -1,9 +1,12 @@
 package com.acme.videoserver.library.sql;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
@@ -36,7 +39,7 @@ public class SQLLibraryTest {
 	public void testListData() throws LibraryAccessException {
 
 		Library library = new SQLLibrary(ds);
-		List<Videoclip> clips = library.clips();
+		Collection<Videoclip> clips = library.clips();
 
 		Assert.assertNotNull(clips);
 		Assert.assertThat(clips, hasSize(3));

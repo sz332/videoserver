@@ -37,7 +37,8 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public String title() {
 		try {
-			return new JdbcSession(dataSource).sql("SELECT title FROM videoclip WHERE id = ?")
+			return new JdbcSession(dataSource)
+					.sql("SELECT title FROM videoclip WHERE id = ?")
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 		} catch (SQLException e) {
@@ -48,7 +49,8 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public String description() {
 		try {
-			return new JdbcSession(dataSource).sql("SELECT description FROM videoclip WHERE id = ?")
+			return new JdbcSession(dataSource)
+					.sql("SELECT description FROM videoclip WHERE id = ?")
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 		} catch (SQLException e) {
@@ -60,7 +62,8 @@ public class SQLVideoclip implements Videoclip {
 	public Image thumbnail() {
 
 		try {
-			String text = new JdbcSession(dataSource).sql("SELECT thumbnail FROM videoclip WHERE id = ?")
+			String text = new JdbcSession(dataSource)
+					.sql("SELECT thumbnail FROM videoclip WHERE id = ?")
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 
@@ -95,7 +98,8 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public List<String> participants() {
 		try {
-			return new JdbcSession(dataSource).sql("SELECT name FROM participant WHERE videoclip_id = ?")
+			return new JdbcSession(dataSource)
+					.sql("SELECT name FROM participant WHERE videoclip_id = ?")
 					.set(uuid)
 					.select(new ListStringOutcome());
 		} catch (SQLException e) {
@@ -106,7 +110,8 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public List<String> tags() {
 		try {
-			return new JdbcSession(dataSource).sql("SELECT name FROM tag WHERE videoclip_id = ?")
+			return new JdbcSession(dataSource)
+					.sql("SELECT name FROM tag WHERE videoclip_id = ?")
 					.set(uuid)
 					.select(new ListStringOutcome());
 		} catch (SQLException e) {

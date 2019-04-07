@@ -1,6 +1,6 @@
 package com.acme.videoserver.core.library.impl;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import com.acme.videoserver.core.library.Image;
@@ -12,11 +12,11 @@ public class ConstVideoClip implements Videoclip {
 	private final String title;
 	private final String description;
 	private final Image thumbnail;
-	private final LocalDateTime recordingDateTime;
+	private final Instant recordingDateTime;
 	private final List<String> participants;
 	private final List<String> tags;
 
-	public ConstVideoClip(String uuid, String title, String description, Image thumbnail, LocalDateTime recordingDateTime, List<String> participants, List<String> tags) {
+	public ConstVideoClip(String uuid, String title, String description, Image thumbnail, Instant recordingDateTime, List<String> participants, List<String> tags) {
 		this.uuid = uuid;
 		this.title = title;
 		this.description = description;
@@ -47,7 +47,7 @@ public class ConstVideoClip implements Videoclip {
 	}
 
 	@Override
-	public LocalDateTime recordingDateTime() {
+	public Instant recordingDateTime() {
 		return recordingDateTime;
 	}
 

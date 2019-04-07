@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class SQLLibrary implements Library {
 				ps.setString(2, clip.title());
 				ps.setString(3, clip.description());
 				ps.setString(4, "");
-				ps.setDate(5, Date.valueOf(clip.recordingDateTime().toLocalDate()));
+				ps.setTimestamp(5, Timestamp.from(clip.recordingDateTime()));
 
 				ps.executeUpdate();
 

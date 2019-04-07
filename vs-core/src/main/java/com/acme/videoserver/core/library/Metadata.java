@@ -1,6 +1,6 @@
 package com.acme.videoserver.core.library;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface Metadata {
@@ -11,7 +11,7 @@ public interface Metadata {
 
 	Image thumbnail();
 
-	LocalDateTime recordingDateTime();
+	Instant recordingDateTime();
 	
 	String description();
 

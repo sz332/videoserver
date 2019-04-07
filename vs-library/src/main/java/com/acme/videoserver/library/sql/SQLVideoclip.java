@@ -1,9 +1,12 @@
 package com.acme.videoserver.library.sql;
 
-import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +17,7 @@ import com.acme.videoserver.core.library.Image;
 import com.acme.videoserver.core.library.Videoclip;
 import com.acme.videoserver.library.common.ListStringOutcome;
 import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.Outcome;
 import com.jcabi.jdbc.SingleOutcome;
 
 // see https://www.yegor256.com/2014/12/01/orm-offensive-anti-pattern.html
@@ -35,8 +39,7 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public String title() {
 		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT title FROM videoclip WHERE id = ?")
+			return new JdbcSession(dataSource).sql("SELECT title FROM videoclip WHERE id = ?")
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 		} catch (SQLException e) {
@@ -47,8 +50,7 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public String description() {
 		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT description FROM videoclip WHERE id = ?")
+			return new JdbcSession(dataSource).sql("SELECT description FROM videoclip WHERE id = ?")
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 		} catch (SQLException e) {
@@ -60,8 +62,7 @@ public class SQLVideoclip implements Videoclip {
 	public Image thumbnail() {
 
 		try {
-			String text = new JdbcSession(dataSource)
-					.sql("SELECT thumbnail FROM videoclip WHERE id = ?")
+			String text = new JdbcSession(dataSource).sql("SELECT thumbnail FROM videoclip WHERE id = ?")
 					.set(uuid)
 					.select(new SingleOutcome<String>(String.class));
 
@@ -72,19 +73,22 @@ public class SQLVideoclip implements Videoclip {
 	}
 
 	@Override
-	public LocalDateTime recordingDateTime() {
+	public Instant recordingDateTime() {
 		try {
-			Date date = new JdbcSession(dataSource)
+			Timestamp timestamp = new JdbcSession(dataSource)
 					.sql("SELECT recordingDateTime FROM videoclip WHERE id = ?")
 					.set(uuid)
-					.select(new SingleOutcome<Date>(Date.class));
+					.select(new Outcome<Timestamp>() {
+						@Override
+						public Timestamp handle(ResultSet rset, Statement stmt) throws SQLException {
+							if (rset.next()) {
+								return rset.getTimestamp(1);
+							}
+							return null;
+						}
+					});
 
-			return LocalDateTime
-					.ofInstant(date
-							.toInstant(),
-							OffsetDateTime
-									.now()
-									.getOffset());
+			return timestamp.toInstant();
 		} catch (SQLException e) {
 			return null;
 		}
@@ -93,8 +97,7 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public List<String> participants() {
 		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT name FROM participant WHERE videoclip_id = ?")
+			return new JdbcSession(dataSource).sql("SELECT name FROM participant WHERE videoclip_id = ?")
 					.set(uuid)
 					.select(new ListStringOutcome());
 		} catch (SQLException e) {
@@ -105,8 +108,7 @@ public class SQLVideoclip implements Videoclip {
 	@Override
 	public List<String> tags() {
 		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT name FROM tag WHERE videoclip_id = ?")
+			return new JdbcSession(dataSource).sql("SELECT name FROM tag WHERE videoclip_id = ?")
 					.set(uuid)
 					.select(new ListStringOutcome());
 		} catch (SQLException e) {

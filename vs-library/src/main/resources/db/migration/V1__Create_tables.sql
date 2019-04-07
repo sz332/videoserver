@@ -3,7 +3,7 @@ CREATE TABLE videoclip (
     title VARCHAR(255) NOT NULL,
     description VARCHAR(2000),
     thumbnail VARCHAR(MAX),
-    recordingDateTime TIMESTAMP
+    recordingDateTime TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE participant (

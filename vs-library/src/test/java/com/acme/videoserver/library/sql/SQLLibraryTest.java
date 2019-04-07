@@ -1,6 +1,9 @@
 package com.acme.videoserver.library.sql;
 
+import static org.hamcrest.Matchers.*;
+
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
@@ -30,12 +33,29 @@ public class SQLLibraryTest {
 	}
 
 	@Test
-	public void testSaveData() throws LibraryAccessException {
+	public void testListData() throws LibraryAccessException {
 
 		Library library = new SQLLibrary(ds);
 		List<Videoclip> clips = library.clips();
 
 		Assert.assertNotNull(clips);
+		Assert.assertThat(clips, hasSize(3));
+		
+		Videoclip clip = library.clip("e817cbe5-e2be-44fb-9858-a6cab54ee03e");
+		
+		Assert.assertEquals("e817cbe5-e2be-44fb-9858-a6cab54ee03e", clip.uuid());
+		Assert.assertEquals("First video", clip.title());
+		Assert.assertEquals("Descr1", clip.description());
+		//Assert.assertEquals(null, clip.thumbnail());
+		Assert.assertEquals(Instant.parse("2019-01-15T18:01:00.Z"), clip.recordingDateTime());
+		
+		List<String> participants = clip.participants();
+		Assert.assertThat(participants, containsInAnyOrder("p1_1","p1_2","p1_3"));
+
+		List<String> tags = clip.tags();
+		Assert.assertThat(tags, containsInAnyOrder("t1_1","t1_2","t1_3"));
+
+		
 	}
 
 }

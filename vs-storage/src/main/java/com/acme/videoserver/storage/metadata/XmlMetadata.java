@@ -1,6 +1,6 @@
 package com.acme.videoserver.storage.metadata;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import com.acme.videoserver.core.image.Base64EncodedImage;
@@ -28,8 +28,8 @@ public class XmlMetadata implements Metadata {
 	}
 
 	@Override
-	public LocalDateTime recordingDateTime() {
-		return LocalDateTime.parse(xml.xpath("//metadata/recordingDateTime/text()").get(0));
+	public Instant recordingDateTime() {
+		return Instant.parse(xml.xpath("//metadata/recordingDateTime/text()").get(0));
 	}
 
 	@Override

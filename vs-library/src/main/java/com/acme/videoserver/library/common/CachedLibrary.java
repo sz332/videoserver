@@ -2,6 +2,7 @@ package com.acme.videoserver.library.common;
 
 import java.util.List;
 
+import org.cactoos.func.StickyFunc;
 import org.cactoos.func.UncheckedFunc;
 import org.cactoos.scalar.UncheckedScalar;
 
@@ -20,14 +21,14 @@ public class CachedLibrary implements Library {
 		this.library = library;
 		this.cache = new StandardCache<>();
 
-		output = new UncheckedFunc<>(input -> {
+		output = new UncheckedFunc<>(new StickyFunc<>(input -> {
 
 			library.clips()
 					.stream()
 					.forEach(clip -> cache.put(clip.uuid(), clip));
 
 			return new UncheckedScalar<List<Videoclip>>(cache::values);
-		});
+		}));
 	}
 
 	@Override

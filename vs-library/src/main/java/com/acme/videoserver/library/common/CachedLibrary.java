@@ -16,20 +16,20 @@ public class CachedLibrary implements Library {
 	
 	public CachedLibrary(Library library) {
 		this.library = library;
-		this.cache = new StandardCache<String, Videoclip>();
+		this.cache = new StandardCache<>();
 	}
 
 	@Override
 	public void add(Videoclip clip) throws LibraryAccessException {
 		library.add(clip);
-		cache.put(clip.uuid(), new CachedVideoclip(clip));
+		cache.put(clip.uuid(), clip);
 	}
 
 	@Override
 	public Videoclip clip(String clipId) throws LibraryAccessException {
 
 		if (!cache.containsKey(clipId)) {
-			cache.put(clipId, new CachedVideoclip(library.clip(clipId)));
+			cache.put(clipId, library.clip(clipId));
 		}
 
 		return cache.get(clipId);
@@ -45,7 +45,7 @@ public class CachedLibrary implements Library {
 		//  then make it sticky
 		
 		if (!allDataReceived) {
-			library.clips().stream().forEach(clip -> cache.put(clip.uuid(), new CachedVideoclip(clip)));
+			library.clips().stream().forEach(clip -> cache.put(clip.uuid(), clip));
 			allDataReceived = true;
 		}
 

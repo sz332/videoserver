@@ -3,30 +3,66 @@ package com.acme.videoserver.library.sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.cactoos.scalar.SolidScalar;
+import org.cactoos.scalar.UncheckedScalar;
+
 import com.acme.videoserver.core.image.Base64EncodedImage;
 import com.acme.videoserver.core.library.Image;
 import com.acme.videoserver.core.library.Videoclip;
-import com.acme.videoserver.library.common.DataAccessException;
 import com.acme.videoserver.library.common.ListStringOutcome;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.Outcome;
-import com.jcabi.jdbc.SingleOutcome;
 
 // see https://www.yegor256.com/2014/12/01/orm-offensive-anti-pattern.html
 public class SQLVideoclip implements Videoclip {
 
-	private final DataSource dataSource;
 	private final String uuid;
+	private final UncheckedScalar<Videoclip> output;
 
 	public SQLVideoclip(DataSource dataSource, String uuid) {
-		this.dataSource = dataSource;
 		this.uuid = uuid;
+
+		this.output = new UncheckedScalar<>(new SolidScalar<>(() -> {
+
+			List<String> participants = new JdbcSession(dataSource).sql("SELECT name FROM participant WHERE videoclip_id = ?")
+					.set(uuid)
+					.select(new ListStringOutcome());
+
+			List<String> tags = new JdbcSession(dataSource).sql("SELECT name FROM tag WHERE videoclip_id = ?")
+					.set(uuid)
+					.select(new ListStringOutcome());
+
+			return new JdbcSession(dataSource).sql("SELECT title, description, thumbnail, recordingDateTime FROM videoclip WHERE id = ?")
+					.set(uuid)
+					.select(new Outcome<Videoclip>() {
+
+						@Override
+						public Videoclip handle(ResultSet rset, Statement stmt) throws SQLException {
+							Videoclip result = null;
+							if (rset.next()) {
+								result = this.fetch(rset);
+							}
+							return result;
+						}
+
+						private Videoclip fetch(ResultSet rset) throws SQLException {
+
+							String title = rset.getString(1);
+							String description = rset.getString(2);
+							Image thumbnail = new Base64EncodedImage(rset.getString(3));
+							Instant time = rset.getTimestamp(4).toInstant();
+
+							return new ConstantVideoclip(uuid, title, description, thumbnail, time, participants, tags);
+						}
+
+					});
+
+		}));
 	}
 
 	@Override
@@ -36,87 +72,32 @@ public class SQLVideoclip implements Videoclip {
 
 	@Override
 	public String title() {
-		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT title FROM videoclip WHERE id = ?")
-					.set(uuid)
-					.select(new SingleOutcome<String>(String.class));
-		} catch (SQLException e) {
-			throw new DataAccessException(e);
-		}
+		return this.output.value().title();
 	}
 
 	@Override
 	public String description() {
-		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT description FROM videoclip WHERE id = ?")
-					.set(uuid)
-					.select(new SingleOutcome<String>(String.class));
-		} catch (SQLException e) {
-			throw new DataAccessException(e);
-		}
+		return this.output.value().description();
 	}
 
 	@Override
 	public Image thumbnail() {
-
-		try {
-			String text = new JdbcSession(dataSource)
-					.sql("SELECT thumbnail FROM videoclip WHERE id = ?")
-					.set(uuid)
-					.select(new SingleOutcome<String>(String.class));
-
-			return new Base64EncodedImage(text);
-		} catch (SQLException e) {
-			throw new DataAccessException(e);
-		}
+		return this.output.value().thumbnail();
 	}
 
 	@Override
 	public Instant recordingDateTime() {
-		try {
-			Timestamp timestamp = new JdbcSession(dataSource)
-					.sql("SELECT recordingDateTime FROM videoclip WHERE id = ?")
-					.set(uuid)
-					.select(new Outcome<Timestamp>() {
-						@Override
-						public Timestamp handle(ResultSet rset, Statement stmt) throws SQLException {
-							if (rset.next()) {
-								return rset.getTimestamp(1);
-							}
-							return null;
-						}
-					});
-
-			return timestamp.toInstant();
-		} catch (SQLException e) {
-			throw new DataAccessException(e);
-		}
+		return this.output.value().recordingDateTime();
 	}
 
 	@Override
 	public List<String> participants() {
-		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT name FROM participant WHERE videoclip_id = ?")
-					.set(uuid)
-					.select(new ListStringOutcome());
-		} catch (SQLException e) {
-			throw new DataAccessException(e);
-		}
+		return this.output.value().participants();
 	}
 
 	@Override
 	public List<String> tags() {
-		try {
-			return new JdbcSession(dataSource)
-					.sql("SELECT name FROM tag WHERE videoclip_id = ?")
-					.set(uuid)
-					.select(new ListStringOutcome());
-		} catch (SQLException e) {
-			throw new DataAccessException(e);
-		}
+		return this.output.value().tags();
 	}
 
 }

@@ -23,7 +23,7 @@ public class CachedLibraryTest {
 	@Before
 	public void before() throws SQLException {
 		ds = new JdbcDataSource();
-		ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=3");
+		ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=2");
 		ds.setUser("");
 		ds.setPassword("");
 

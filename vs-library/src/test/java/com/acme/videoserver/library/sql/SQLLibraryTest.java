@@ -26,7 +26,7 @@ public class SQLLibraryTest {
 	@Before
 	public void before() throws SQLException {
 		ds = new JdbcDataSource();
-		ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+		ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=2");
 		ds.setUser("");
 		ds.setPassword("");
 
@@ -58,8 +58,9 @@ public class SQLLibraryTest {
 
 		List<String> tags = clip.tags();
 		Assert.assertThat(tags, containsInAnyOrder("t1_1","t1_2","t1_3"));
-
 		
+		clip = library.clip("e817cbe5-e2be-44fb-9858-a6cab54ee03e");
+		Assert.assertNotNull(clip);
 	}
 
 }

@@ -28,7 +28,6 @@ public class SQLVideoclip implements Videoclip {
 		this.uuid = uuid;
 
 		this.output = new UncheckedScalar<>(new SolidScalar<>(() -> {
-
 			List<String> participants = new JdbcSession(dataSource).sql("SELECT name FROM participant WHERE videoclip_id = ?")
 					.set(uuid)
 					.select(new ListStringOutcome());
@@ -55,13 +54,12 @@ public class SQLVideoclip implements Videoclip {
 							String title = rset.getString(1);
 							String description = rset.getString(2);
 							Image thumbnail = new Base64EncodedImage(rset.getString(3));
-							Instant time = rset.getTimestamp(4).toInstant();
+							Instant time = rset.getTimestamp(4)
+									.toInstant();
 
 							return new ConstantVideoclip(uuid, title, description, thumbnail, time, participants, tags);
 						}
-
 					});
-
 		}));
 	}
 
@@ -99,5 +97,4 @@ public class SQLVideoclip implements Videoclip {
 	public List<String> tags() {
 		return this.output.value().tags();
 	}
-
 }

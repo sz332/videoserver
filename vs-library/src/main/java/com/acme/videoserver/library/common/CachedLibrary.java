@@ -2,6 +2,9 @@ package com.acme.videoserver.library.common;
 
 import java.util.List;
 
+import org.cactoos.func.UncheckedFunc;
+import org.cactoos.scalar.UncheckedScalar;
+
 import com.acme.videoserver.core.library.Library;
 import com.acme.videoserver.core.library.LibraryAccessException;
 import com.acme.videoserver.core.library.Videoclip;
@@ -11,12 +14,20 @@ public class CachedLibrary implements Library {
 	private final Library library;
 	private final Cache<String, Videoclip> cache;
 
-	// OOPS this makes me mutable
-	private boolean allDataReceived = false;
-	
+	private UncheckedFunc<String, UncheckedScalar<List<Videoclip>>> output;
+
 	public CachedLibrary(Library library) {
 		this.library = library;
 		this.cache = new StandardCache<>();
+
+		output = new UncheckedFunc<>(input -> {
+
+			library.clips()
+					.stream()
+					.forEach(clip -> cache.put(clip.uuid(), clip));
+
+			return new UncheckedScalar<List<Videoclip>>(cache::values);
+		});
 	}
 
 	@Override
@@ -37,19 +48,7 @@ public class CachedLibrary implements Library {
 
 	@Override
 	public synchronized List<Videoclip> clips() throws LibraryAccessException {
-
-		// how to remove the allDataReceived:
-		//	create a function which returns a function
-		//  this function will execute the library.clips().stream()
-		//  and return a function which executes cache.values()
-		//  then make it sticky
-		
-		if (!allDataReceived) {
-			library.clips().stream().forEach(clip -> cache.put(clip.uuid(), clip));
-			allDataReceived = true;
-		}
-
-		return cache.values();
+		return this.output.apply("").value();
 	}
 
 }

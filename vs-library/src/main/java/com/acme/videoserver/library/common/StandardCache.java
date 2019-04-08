@@ -30,7 +30,7 @@ public class StandardCache<K, V> implements Cache<K, V> {
 
 	@Override
 	public List<V> values() {
-		return new ArrayList<V>(map.values());
+		return new ArrayList<>(map.values());
 	}
 
 }

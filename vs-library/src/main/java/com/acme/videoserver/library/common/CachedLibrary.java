@@ -2,7 +2,7 @@ package com.acme.videoserver.library.common;
 
 import java.util.List;
 
-import org.cactoos.func.StickyFunc;
+import org.cactoos.func.SolidFunc;
 import org.cactoos.func.UncheckedFunc;
 import org.cactoos.scalar.UncheckedScalar;
 
@@ -23,7 +23,7 @@ public class CachedLibrary implements Library {
 		this.library = library;
 		this.cache = new StandardCache<>();
 
-		output = new UncheckedFunc<>(new StickyFunc<>(input -> {
+		output = new UncheckedFunc<>(new SolidFunc<>(input -> {
 
 			library.clips()
 					.stream()

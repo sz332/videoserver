@@ -12,13 +12,17 @@ import com.acme.videoserver.core.storage.StorageConnection;
 public class SVNStorage implements Storage {
 
     private final String url;
+    private final String user;
+    private final String password;
 
-    public SVNStorage(String url) {
+    public SVNStorage(String url, String user, String password) {
         this.url = url;
+        this.user = user;
+        this.password = password;
     }
 
     @Override
-    public StorageConnection connect(String user, String password) throws StorageAccessException {
+    public StorageConnection connect() throws StorageAccessException {
 
         try {
             SvnKitClientAdapterFactory.setup();

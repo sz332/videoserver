@@ -53,9 +53,9 @@ public class SVNStorageTest {
     @Test
     public void _001_testConnect() throws StorageAccessException {
 
-        Storage storage = new SVNStorage(URL);
+        Storage storage = new SVNStorage(URL, USER, PASSWORD);
 
-        StorageConnection connect = storage.connect(USER, PASSWORD);
+        StorageConnection connect = storage.connect();
 
         Assert.assertNotNull(connect);
     }
@@ -63,9 +63,9 @@ public class SVNStorageTest {
     @Test
     public void _002_testList() throws StorageAccessException {
 
-        Storage storage = new SVNStorage(URL);
+        Storage storage = new SVNStorage(URL, USER, PASSWORD);
 
-        StorageConnection connect = storage.connect(USER, PASSWORD);
+        StorageConnection connect = storage.connect();
         Assert.assertNotNull(connect);
 
         RemoteLocation remoteLocation = connect.root();

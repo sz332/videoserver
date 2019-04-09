@@ -16,9 +16,6 @@ import com.acme.videoserver.core.storage.StorageConnection;
 
 public class FileSystemStorageTest {
 
-	private static final String USER = "";
-	private static final String PASSWORD = "";
-
 	@Test
 	public void testListFiles() throws StorageAccessException {
 
@@ -27,7 +24,7 @@ public class FileSystemStorageTest {
 		Storage storage = new FilesystemStorage(fsRoot.toPath());
 		Assert.assertNotNull(storage);
 
-		StorageConnection connection = storage.connect(USER, PASSWORD);
+		StorageConnection connection = storage.connect();
 		Assert.assertNotNull(connection);
 
 		RemoteLocation root = connection.root();

@@ -15,7 +15,7 @@ public class FilesystemStorage implements Storage {
     }
     
     @Override
-    public StorageConnection connect(String user, String password) throws StorageAccessException {
+    public StorageConnection connect() throws StorageAccessException {
         return new FileSystemStorageConnection(root);
     }
     

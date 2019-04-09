@@ -8,6 +8,7 @@ import com.acme.videoserver.core.storage.Storage;
 import com.acme.videoserver.core.storage.StorageAccessException;
 import com.acme.videoserver.core.storage.StorageConnection;
 import com.acme.videoserver.core.storage.Traversal;
+import com.acme.videoserver.storage.metadata.XmlMetadata;
 
 public class PeriodicSynchronization {
 
@@ -35,7 +36,7 @@ public class PeriodicSynchronization {
 	private void processNode(RemoteLocation location) {
 		try {
 			if ("vxml".equals(location.extension())) {
-				String file = new String(location.download(), StandardCharsets.UTF_8);
+				XmlMetadata metadata = new XmlMetadata(new String(location.download(), StandardCharsets.UTF_8));
 				
 			}
 		} catch (StorageAccessException e) {

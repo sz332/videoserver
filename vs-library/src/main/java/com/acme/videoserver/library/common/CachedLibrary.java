@@ -50,7 +50,7 @@ public class CachedLibrary implements Library {
 	}
 
 	@Override
-	public synchronized List<Videoclip> clips() throws LibraryAccessException {
+	public List<Videoclip> clips() throws LibraryAccessException {
 		return this.output.apply("").value();
 	}
 

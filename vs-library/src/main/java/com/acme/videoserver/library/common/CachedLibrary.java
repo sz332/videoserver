@@ -6,6 +6,8 @@ import org.cactoos.func.StickyFunc;
 import org.cactoos.func.UncheckedFunc;
 import org.cactoos.scalar.UncheckedScalar;
 
+import com.acme.videoserver.core.cache.Cache;
+import com.acme.videoserver.core.cache.StandardCache;
 import com.acme.videoserver.core.library.Library;
 import com.acme.videoserver.core.library.LibraryAccessException;
 import com.acme.videoserver.core.library.Videoclip;

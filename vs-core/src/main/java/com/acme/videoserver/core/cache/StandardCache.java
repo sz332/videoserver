@@ -1,4 +1,4 @@
-package com.acme.videoserver.library.common;
+package com.acme.videoserver.core.cache;
 
 import java.util.ArrayList;
 import java.util.HashMap;

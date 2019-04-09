@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
+import com.acme.videoserver.core.image.Base64Encoded;
 import com.acme.videoserver.core.library.Library;
 import com.acme.videoserver.core.library.LibraryAccessException;
 import com.acme.videoserver.core.library.Videoclip;
@@ -36,7 +37,7 @@ public class SQLLibrary implements Library {
 				ps.setString(1, clip.uuid());
 				ps.setString(2, clip.title());
 				ps.setString(3, clip.description());
-				ps.setString(4, "");
+				ps.setString(4, new Base64Encoded(clip.thumbnail()).asString());
 				ps.setTimestamp(5, Timestamp.from(clip.recordingDateTime()));
 
 				ps.executeUpdate();

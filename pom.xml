@@ -17,6 +17,7 @@
 		<module>vs-persistence</module>
 		<module>vs-webapp</module>
 		<module>vs-library</module>
+		<module>vs-update</module>
 	</modules>
 
 	<dependencyManagement>

@@ -1,7 +1,13 @@
 package com.acme.videoserver.update;
 
+import java.nio.charset.StandardCharsets;
+
 import com.acme.videoserver.core.library.Library;
+import com.acme.videoserver.core.storage.RemoteLocation;
 import com.acme.videoserver.core.storage.Storage;
+import com.acme.videoserver.core.storage.StorageAccessException;
+import com.acme.videoserver.core.storage.StorageConnection;
+import com.acme.videoserver.core.storage.Traversal;
 
 public class PeriodicSynchronization {
 
@@ -14,7 +20,27 @@ public class PeriodicSynchronization {
 	}
 	
 	public void synchronize() {
-		
+		try {
+			StorageConnection connection = storage.connect();
+			
+			Traversal traversal = new Traversal(connection.root());
+
+			traversal.each(this::processNode);
+			
+		} catch (StorageAccessException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	private void processNode(RemoteLocation location) {
+		try {
+			if ("vxml".equals(location.extension())) {
+				String file = new String(location.download(), StandardCharsets.UTF_8);
+				
+			}
+		} catch (StorageAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

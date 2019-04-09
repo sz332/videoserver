@@ -1,15 +1,15 @@
 package com.acme.videoserver.storage.common;
 
-public class FileExtension {
+public class Extension {
 
 	private String fileName;
 
-	public FileExtension(String fileName) {
+	public Extension(String fileName) {
 		this.fileName = fileName;
 	}
 
 	// https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java
-	public String extension() {
+	public String value() {
 		char ch;
 		int len;
 

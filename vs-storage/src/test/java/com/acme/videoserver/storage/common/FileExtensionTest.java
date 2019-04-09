@@ -22,6 +22,6 @@ public class FileExtensionTest {
 	}
 
 	String getExtension(String fileName) {
-		return new FileExtension(fileName).extension();
+		return new Extension(fileName).value();
 	}
 }

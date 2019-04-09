@@ -9,10 +9,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.acme.videoserver.core.storage.RemoteLocation;
+import com.acme.videoserver.core.storage.Traversal;
 import com.acme.videoserver.core.storage.Storage;
 import com.acme.videoserver.core.storage.StorageAccessException;
 import com.acme.videoserver.core.storage.StorageConnection;
-import com.acme.videoserver.storage.common.RemoteLocationWalker;
 
 public class FileSystemStorageTest {
 
@@ -33,9 +33,9 @@ public class FileSystemStorageTest {
 		RemoteLocation root = connection.root();
 		Assert.assertNotNull(root);
 
-		RemoteLocationWalker walker = new RemoteLocationWalker(root);
+		Traversal traversal = new Traversal(root);
 
-		walker.walk(remoteLocation -> {
+		traversal.each(remoteLocation -> {
 			try {
 				System.out.println(remoteLocation.name());
 				System.out.println(remoteLocation.path());

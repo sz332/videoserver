@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import com.acme.videoserver.core.storage.RemoteLocation;
 import com.acme.videoserver.core.storage.StorageAccessException;
-import com.acme.videoserver.storage.common.FileExtension;
+import com.acme.videoserver.storage.common.Extension;
 
 public class FileSystemRemoteLocation implements RemoteLocation {
 
@@ -28,7 +28,7 @@ public class FileSystemRemoteLocation implements RemoteLocation {
 	
 	@Override
 	public String extension() throws StorageAccessException {
-		return new FileExtension(name()).extension();
+		return new Extension(name()).value();
 	}
 
 	@Override

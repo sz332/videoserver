@@ -1,5 +1,22 @@
 package com.acme.videoserver.core.library;
 
-public interface Videoclip extends Metadata {
+import java.time.Instant;
+import java.util.List;
 
+public interface Videoclip {
+
+	String uuid();
+	
+	String title();
+
+	Image thumbnail();
+
+	Instant recordingDateTime();
+	
+	String description();
+
+	List<String> participants();
+
+	List<String> tags();
+	
 }

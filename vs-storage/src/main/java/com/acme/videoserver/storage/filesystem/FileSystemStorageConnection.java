@@ -1,5 +1,6 @@
 package com.acme.videoserver.storage.filesystem;
 
+import java.io.File;
 import java.nio.file.Path;
 
 import com.acme.videoserver.core.storage.RemoteLocation;
@@ -21,8 +22,12 @@ public class FileSystemStorageConnection implements StorageConnection {
 
     @Override
     public RemoteLocation resolve(String path) throws StorageAccessException {
-        // TODO Auto-generated method stub
-        return null;
+        return new FileSystemRemoteLocation(new File(path).toPath());
     }
-
+    
+    @Override
+    public void close() throws StorageAccessException {
+    	// Do nothing 
+    }
+    
 }

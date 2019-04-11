@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import org.cactoos.text.TextOf;
 import org.junit.Test;
 
-import com.acme.videoserver.core.library.Metadata;
+import com.acme.videoserver.core.library.Videoclip;
 
 
 public class XmlMetadataTest {
@@ -19,20 +19,20 @@ public class XmlMetadataTest {
 		
 		String text = new TextOf(getClass().getResourceAsStream("/metadata.xml")).asString();
 
-		Metadata metadata = new XmlMetadata(text);
+		Videoclip videoclip = new XmlVideoclip(text);
 		
-		assertEquals("af935b53-2877-4454-93a9-524650d6787b", metadata.uuid());
-		assertEquals("My title", metadata.title());
-		assertEquals("My description", metadata.description());
-		assertEquals(LocalDateTime.parse("2019-04-05T10:15"), metadata.recordingDateTime());
-		assertEquals("image/jpeg", metadata.thumbnail().mimeType());
+		assertEquals("af935b53-2877-4454-93a9-524650d6787b", videoclip.uuid());
+		assertEquals("My title", videoclip.title());
+		assertEquals("My description", videoclip.description());
+		assertEquals(LocalDateTime.parse("2019-04-05T10:15"), videoclip.recordingDateTime());
+		assertEquals("image/jpeg", videoclip.thumbnail().mimeType());
 		
-		assertTrue(metadata.participants().contains("John Doe"));
-		assertTrue(metadata.participants().contains("Jack Doe"));
+		assertTrue(videoclip.participants().contains("John Doe"));
+		assertTrue(videoclip.participants().contains("Jack Doe"));
 		
-		assertTrue(metadata.tags().contains("fun"));
-		assertTrue(metadata.tags().contains("java"));
-		assertTrue(metadata.tags().contains("example"));
+		assertTrue(videoclip.tags().contains("fun"));
+		assertTrue(videoclip.tags().contains("java"));
+		assertTrue(videoclip.tags().contains("example"));
 	}
 	
 	

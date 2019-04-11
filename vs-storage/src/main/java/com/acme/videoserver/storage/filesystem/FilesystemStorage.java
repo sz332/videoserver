@@ -18,5 +18,5 @@ public class FilesystemStorage implements Storage {
     public StorageConnection connect() throws StorageAccessException {
         return new FileSystemStorageConnection(root);
     }
-    
+
 }

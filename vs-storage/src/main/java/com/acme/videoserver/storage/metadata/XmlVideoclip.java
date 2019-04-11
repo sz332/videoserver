@@ -5,15 +5,15 @@ import java.util.List;
 
 import com.acme.videoserver.core.image.Base64EncodedImage;
 import com.acme.videoserver.core.library.Image;
-import com.acme.videoserver.core.library.Metadata;
+import com.acme.videoserver.core.library.Videoclip;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 
-public class XmlMetadata implements Metadata {
+public class XmlVideoclip implements Videoclip {
 
 	private final XML xml;
 
-	public XmlMetadata(String text) {
+	public XmlVideoclip(String text) {
 		this.xml = new XMLDocument(text);
 	}
 	

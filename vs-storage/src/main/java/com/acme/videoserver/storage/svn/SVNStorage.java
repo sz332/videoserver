@@ -14,7 +14,7 @@ public class SVNStorage implements Storage {
     private final String url;
     private final String user;
     private final String password;
-
+ 
     public SVNStorage(String url, String user, String password) {
         this.url = url;
         this.user = user;

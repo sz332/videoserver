@@ -8,22 +8,27 @@ import com.acme.videoserver.core.storage.StorageConnection;
 
 public class SVNStorageConnection implements StorageConnection {
 
-    private final ISVNClientAdapter svnClient;
-    private final String url;
-    
-    public SVNStorageConnection(ISVNClientAdapter svnClient, String url) {
-        this.svnClient = svnClient;
-        this.url = url;
-    }
+	private final ISVNClientAdapter svnClient;
+	private final String url;
 
-    @Override
-    public RemoteLocation root() throws StorageAccessException {
-            return new SVNRemoteLocation(svnClient, url);
-    }
+	public SVNStorageConnection(ISVNClientAdapter svnClient, String url) {
+		this.svnClient = svnClient;
+		this.url = url;
+	}
 
-    @Override
-    public RemoteLocation resolve(String path) throws StorageAccessException {
-        return null;
-    }
+	@Override
+	public RemoteLocation root() throws StorageAccessException {
+		return new SVNRemoteLocation(svnClient, url);
+	}
+
+	@Override
+	public RemoteLocation resolve(String path) throws StorageAccessException {
+		return new SVNRemoteLocation(svnClient, path);
+	}
+
+	@Override
+	public void close() throws StorageAccessException {
+		this.svnClient.dispose();
+	}
 
 }

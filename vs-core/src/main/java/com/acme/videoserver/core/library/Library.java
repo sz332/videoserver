@@ -8,6 +8,8 @@ public interface Library {
 
     List<Videoclip> clips() throws LibraryAccessException;
 
+    Result<Videoclip> clips(Query query) throws LibraryAccessException;
+
     Videoclip clip(String clipId) throws LibraryAccessException;
 
 }

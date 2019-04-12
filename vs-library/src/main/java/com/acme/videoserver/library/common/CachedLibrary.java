@@ -1,16 +1,13 @@
 package com.acme.videoserver.library.common;
 
-import java.util.List;
-
+import com.acme.videoserver.core.cache.Cache;
+import com.acme.videoserver.core.cache.StandardCache;
+import com.acme.videoserver.core.library.*;
 import org.cactoos.func.SolidFunc;
 import org.cactoos.func.UncheckedFunc;
 import org.cactoos.scalar.UncheckedScalar;
 
-import com.acme.videoserver.core.cache.Cache;
-import com.acme.videoserver.core.cache.StandardCache;
-import com.acme.videoserver.core.library.Library;
-import com.acme.videoserver.core.library.LibraryAccessException;
-import com.acme.videoserver.core.library.Videoclip;
+import java.util.List;
 
 public class CachedLibrary implements Library {
 
@@ -29,7 +26,7 @@ public class CachedLibrary implements Library {
 					.stream()
 					.forEach(clip -> cache.put(clip.uuid(), clip));
 
-			return new UncheckedScalar<List<Videoclip>>(cache::values);
+			return new UncheckedScalar<>(cache::values);
 		}));
 	}
 
@@ -52,6 +49,11 @@ public class CachedLibrary implements Library {
 	@Override
 	public List<Videoclip> clips() throws LibraryAccessException {
 		return this.output.apply("").value();
+	}
+
+	@Override
+	public Result<Videoclip> clips(Query query) throws LibraryAccessException {
+		return null;
 	}
 
 }

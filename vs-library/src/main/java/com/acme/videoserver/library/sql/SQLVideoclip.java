@@ -4,9 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -14,6 +12,8 @@ import org.cactoos.scalar.SolidScalar;
 import org.cactoos.scalar.UncheckedScalar;
 
 import com.acme.videoserver.core.image.Base64EncodedImage;
+import com.acme.videoserver.core.library.ComparableVideoclip;
+import com.acme.videoserver.core.library.ConstantVideoclip;
 import com.acme.videoserver.core.library.Image;
 import com.acme.videoserver.core.library.Videoclip;
 import com.acme.videoserver.library.common.ListStringOutcome;
@@ -56,10 +56,11 @@ public class SQLVideoclip implements Videoclip {
 							String title = rset.getString(1);
 							String description = rset.getString(2);
 							Image thumbnail = new Base64EncodedImage(rset.getString(3));
-							Instant time = rset.getTimestamp(4)
-									.toInstant();
+							Instant time = rset.getTimestamp(4).toInstant();
 
-							return new ConstantVideoclip(uuid, title, description, thumbnail, time, participants, tags);
+							return new ComparableVideoclip(
+									new ConstantVideoclip(uuid, title, description, thumbnail, time, participants, tags)
+								);
 						}
 					});
 		}));
@@ -104,41 +105,6 @@ public class SQLVideoclip implements Videoclip {
 	public List<String> tags() {
 		return this.output.value()
 				.tags();
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(description(), participants(), recordingDateTime(), tags(), thumbnail(), title(), uuid());
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-
-		if (obj == null) {
-			return false;
-		}
-
-		if (!(obj instanceof Videoclip)) {
-			return false;
-		}
-
-		Videoclip other = Videoclip.class.cast(obj);
-
-		return Objects.equals(uuid, other.uuid()) && Objects.equals(title(), other.title())
-				&& Objects.equals(description(), other.description()) && Objects.equals(recordingDateTime(), other.recordingDateTime())
-				&& new HashSet<>(participants()).equals(new HashSet<>(other.participants()))
-				&& new HashSet<>(tags()).equals(new HashSet<>(other.tags())) && thumbnailEquals(thumbnail(), other.thumbnail());
-	}
-
-	private boolean thumbnailEquals(Image image1, Image image2) {
-		if ((image1 == null && image2 != null) || (image1 != null && image2 == null) || (image1 == null && image2 == null)) {
-			return false;
-		}
-
-		return image1.equals(image2);
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.acme.videoserver.library.sql;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import java.sql.SQLException;
@@ -17,6 +16,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.acme.videoserver.core.library.ComparableVideoclip;
+import com.acme.videoserver.core.library.ConstantVideoclip;
 import com.acme.videoserver.core.library.Library;
 import com.acme.videoserver.core.library.LibraryAccessException;
 import com.acme.videoserver.core.library.Videoclip;
@@ -65,49 +66,61 @@ public class SQLLibraryTest {
 		clip = library.clip("e817cbe5-e2be-44fb-9858-a6cab54ee03e");
 		Assert.assertNotNull(clip);
 	}
-	
+
 	@Test
-	public void testInsert() throws LibraryAccessException { 
-		
-		String uuid = UUID.randomUUID().toString();
-		
-		Videoclip clip = new ConstantVideoclip(uuid, "Test title 1", "test details 1", 
-				new FakeImage(), 
-				Instant.now(), 
-				Arrays.asList("p1", "p2"), 
-				Arrays.asList("t1","t2"));
-		
-		Library library = new SQLLibrary(ds);
-		library.add(clip);
-		
-		Videoclip storedClip = library.clip(uuid);
-		
-		Assert.assertTrue(clip.equals(storedClip));
-	}
-	
-	@Test
-	public void testModification() throws LibraryAccessException { 
+	public void testInsert() throws LibraryAccessException {
+
+		String uuid = UUID.randomUUID()
+				.toString();
+
+		Videoclip clip = new ComparableVideoclip(
+							new ConstantVideoclip(
+									uuid, 
+									"Test title 1", 
+									"test details 1", 
+									new FakeImage(),
+									Instant.now(), 
+									Arrays.asList("p1", "p2"), 
+									Arrays.asList("t1", "t2")));
 
 		Library library = new SQLLibrary(ds);
-		
-		String uuid = UUID.randomUUID().toString();
-		
-		Videoclip clip = new ConstantVideoclip(uuid, "Test title 1", "test details 1", 
-				new FakeImage(), 
-				Instant.now(), 
-				Arrays.asList("p1", "p2"), 
-				Arrays.asList("t1","t2"));
 		library.add(clip);
-		
-		Videoclip modifiedClip = new ConstantVideoclip(uuid, "Test title 2", "test details 2", 
-				new FakeImage(), 
-				Instant.now(), 
-				Arrays.asList("p3", "p2"), 
-				Arrays.asList("t3","t4"));
-		library.add(modifiedClip);
-		
+
 		Videoclip storedClip = library.clip(uuid);
-		
+
+		Assert.assertTrue(clip.equals(storedClip));
+	}
+
+	@Test
+	public void testModification() throws LibraryAccessException {
+
+		Library library = new SQLLibrary(ds);
+
+		String uuid = UUID.randomUUID().toString();
+
+		Videoclip clip = new ComparableVideoclip(
+							new ConstantVideoclip(uuid, 
+									"Test title 1", 
+									"test details 1", 
+									new FakeImage(),
+									Instant.now(), 
+									Arrays.asList("p1", "p2"), 
+									Arrays.asList("t1", "t2")));
+		library.add(clip);
+
+		Videoclip modifiedClip = new ComparableVideoclip(
+									new ConstantVideoclip(
+											uuid, 
+											"Test title 2", 
+											"test details 2", 
+											new FakeImage(),
+											Instant.now(), 
+											Arrays.asList("p3", "p2"), 
+											Arrays.asList("t3", "t4")));
+		library.add(modifiedClip);
+
+		Videoclip storedClip = library.clip(uuid);
+
 		Assert.assertTrue(modifiedClip.equals(storedClip));
 	}
 

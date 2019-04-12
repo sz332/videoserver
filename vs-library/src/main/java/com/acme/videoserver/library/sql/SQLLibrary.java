@@ -102,13 +102,33 @@ public class SQLLibrary implements Library {
     @Override
     public Result<Videoclip> clips(Query query) throws LibraryAccessException {
         try {
+            String sql = " FROM videoclip v WHERE " +
+                    "title ILIKE ? OR " +
+                    "description ILIKE ? OR " +
+                    "EXISTS (SELECT 1 FROM tag t WHERE v.id = t.videoclip_id AND t.name ILIKE ?) OR " +
+                    "EXISTS (SELECT 1 FROM participant p WHERE v.id = p.videoclip_id AND p.name ILIKE ?)";
+
+            String limitedSql = "SELECT id " + sql + " LIMIT ? OFFSET ?";
+
+            String filter = "%" + query.filter() + "%";
 
             int total = new JdbcSession(dataSource)
-                    .sql("SELECT * FROM videoclip")
-                    .select(new SingleOutcome<>(Integer.class))
+                    .sql("SELECT COUNT(id) " + sql)
+                    .set(filter)
+                    .set(filter)
+                    .set(filter)
+                    .set(filter)
+                    .select(new SingleOutcome<>(Long.class))
                     .intValue();
 
-            List<Videoclip> clips = new JdbcSession(dataSource).sql("SELECT id FROM videoclip")
+            List<Videoclip> clips = new JdbcSession(dataSource)
+                    .sql(limitedSql)
+                    .set(query.filter())
+                    .set(query.filter())
+                    .set(query.filter())
+                    .set(query.filter())
+                    .set(query.limit() == null ? Integer.MAX_VALUE : query.limit())
+                    .set(query.offset() == null ? 0 : query.offset())
                     .select(new ListStringOutcome())
                     .stream()
                     .map(s -> new SQLVideoclip(dataSource, s))

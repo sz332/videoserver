@@ -70,31 +70,37 @@ public class SQLVideoclip implements Videoclip {
 
 	@Override
 	public String title() {
-		return this.output.value().title();
+		return this.output.value()
+				.title();
 	}
 
 	@Override
 	public String description() {
-		return this.output.value().description();
+		return this.output.value()
+				.description();
 	}
 
 	@Override
 	public Image thumbnail() {
-		return this.output.value().thumbnail();
+		return this.output.value()
+				.thumbnail();
 	}
 
 	@Override
 	public Instant recordingDateTime() {
-		return this.output.value().recordingDateTime();
+		return this.output.value()
+				.recordingDateTime();
 	}
 
 	@Override
 	public List<String> participants() {
-		return this.output.value().participants();
+		return this.output.value()
+				.participants();
 	}
 
 	@Override
 	public List<String> tags() {
-		return this.output.value().tags();
+		return this.output.value()
+				.tags();
 	}
 }

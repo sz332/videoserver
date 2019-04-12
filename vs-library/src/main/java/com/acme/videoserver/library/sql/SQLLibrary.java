@@ -16,6 +16,7 @@ import com.acme.videoserver.core.library.Videoclip;
 import com.acme.videoserver.library.common.ListStringOutcome;
 import com.jcabi.jdbc.JdbcSession;
 
+// FIXME rename class to H2SQLLibrary because of the H2 implementation
 public class SQLLibrary implements Library {
 
 	private final DataSource dataSource;
@@ -32,7 +33,7 @@ public class SQLLibrary implements Library {
 			connection.setAutoCommit(false);
 
 			try (PreparedStatement ps = connection.prepareStatement(
-					"INSERT INTO videoclip(id, title, description, thumbnail, recordingDateTime) VALUES (?, ?, ?, ?, ?)")) {
+					"MERGE INTO videoclip(id, title, description, thumbnail, recordingDateTime) VALUES (?, ?, ?, ?, ?)")) {
 
 				ps.setString(1, clip.uuid());
 				ps.setString(2, clip.title());
@@ -42,6 +43,11 @@ public class SQLLibrary implements Library {
 
 				ps.executeUpdate();
 
+				try (PreparedStatement psp = connection.prepareStatement("DELETE FROM participant WHERE videoclip_id = ?")) {
+					psp.setString(1, clip.uuid());
+					psp.executeUpdate();
+				}
+				
 				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO participant(videoclip_id, name) VALUES (?, ?)")) {
 
 					for (String participant : clip.participants()) {
@@ -53,6 +59,11 @@ public class SQLLibrary implements Library {
 					psp.executeBatch();
 				}
 
+				try (PreparedStatement psp = connection.prepareStatement("DELETE FROM tag WHERE videoclip_id = ?")) {
+					psp.setString(1, clip.uuid());
+					psp.executeUpdate();
+				}
+				
 				try (PreparedStatement psp = connection.prepareStatement("INSERT INTO tag(videoclip_id, name) VALUES (?, ?)")) {
 
 					for (String tag : clip.tags()) {

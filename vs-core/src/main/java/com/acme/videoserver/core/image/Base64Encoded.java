@@ -13,7 +13,12 @@ public class Base64Encoded {
 	}
 
 	public String asString() {
-		return "data:image/" + image.mimeType() + ";base64," + Base64.getMimeEncoder().encode(image.data());
+		
+		byte[] data = image.data();
+		
+		String encodedData = data.length == 0 ? "" : Base64.getMimeEncoder().encodeToString(image.data());
+		
+		return "data:" + image.mimeType() + ";base64," + encodedData;
 	}
 	
 }

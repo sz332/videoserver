@@ -6,8 +6,10 @@ import static org.hamcrest.Matchers.is;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
@@ -44,7 +46,6 @@ public class SQLLibraryTest {
 		Collection<Videoclip> clips = library.clips();
 
 		Assert.assertNotNull(clips);
-		Assert.assertThat(clips, hasSize(3));
 
 		Videoclip clip = library.clip("e817cbe5-e2be-44fb-9858-a6cab54ee03e");
 
@@ -63,6 +64,51 @@ public class SQLLibraryTest {
 
 		clip = library.clip("e817cbe5-e2be-44fb-9858-a6cab54ee03e");
 		Assert.assertNotNull(clip);
+	}
+	
+	@Test
+	public void testInsert() throws LibraryAccessException { 
+		
+		String uuid = UUID.randomUUID().toString();
+		
+		Videoclip clip = new ConstantVideoclip(uuid, "Test title 1", "test details 1", 
+				new FakeImage(), 
+				Instant.now(), 
+				Arrays.asList("p1", "p2"), 
+				Arrays.asList("t1","t2"));
+		
+		Library library = new SQLLibrary(ds);
+		library.add(clip);
+		
+		Videoclip storedClip = library.clip(uuid);
+		
+		Assert.assertTrue(clip.equals(storedClip));
+	}
+	
+	@Test
+	public void testModification() throws LibraryAccessException { 
+
+		Library library = new SQLLibrary(ds);
+		
+		String uuid = UUID.randomUUID().toString();
+		
+		Videoclip clip = new ConstantVideoclip(uuid, "Test title 1", "test details 1", 
+				new FakeImage(), 
+				Instant.now(), 
+				Arrays.asList("p1", "p2"), 
+				Arrays.asList("t1","t2"));
+		library.add(clip);
+		
+		Videoclip modifiedClip = new ConstantVideoclip(uuid, "Test title 2", "test details 2", 
+				new FakeImage(), 
+				Instant.now(), 
+				Arrays.asList("p3", "p2"), 
+				Arrays.asList("t3","t4"));
+		library.add(modifiedClip);
+		
+		Videoclip storedClip = library.clip(uuid);
+		
+		Assert.assertTrue(modifiedClip.equals(storedClip));
 	}
 
 }

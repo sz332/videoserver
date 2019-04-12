@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -103,4 +105,40 @@ public class SQLVideoclip implements Videoclip {
 		return this.output.value()
 				.tags();
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(description(), participants(), recordingDateTime(), tags(), thumbnail(), title(), uuid());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (!(obj instanceof Videoclip)) {
+			return false;
+		}
+
+		Videoclip other = Videoclip.class.cast(obj);
+
+		return Objects.equals(uuid, other.uuid()) && Objects.equals(title(), other.title())
+				&& Objects.equals(description(), other.description()) && Objects.equals(recordingDateTime(), other.recordingDateTime())
+				&& new HashSet<>(participants()).equals(new HashSet<>(other.participants()))
+				&& new HashSet<>(tags()).equals(new HashSet<>(other.tags())) && thumbnailEquals(thumbnail(), other.thumbnail());
+	}
+
+	private boolean thumbnailEquals(Image image1, Image image2) {
+		if ((image1 == null && image2 != null) || (image1 != null && image2 == null) || (image1 == null && image2 == null)) {
+			return false;
+		}
+
+		return image1.equals(image2);
+	}
+
 }

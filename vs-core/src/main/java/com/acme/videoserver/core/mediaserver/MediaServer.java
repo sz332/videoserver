@@ -6,6 +6,6 @@ public interface MediaServer {
 
 	void add(Videoclip videoclip, String location);
 	
-    Media stream(String mediaId);
+    Media stream(String mediaId) throws MediaServerAccessException;
 
 }

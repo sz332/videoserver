@@ -11,60 +11,69 @@ import com.acme.videoserver.core.library.Image;
 
 public class Base64EncodedImage implements Image {
 
-    private static final Pattern PATTERN = Pattern.compile("data:image\\/([a-zA-Z]*);base64,([^\"]*)");
+	private static final Pattern PATTERN = Pattern.compile("data:image\\/([a-zA-Z]*);base64,([^\"]*)");
 
-    private final UncheckedScalar<Base64Encoded> output;
+	private final UncheckedScalar<Base64Encoded> output;
 
-    public Base64EncodedImage(String text) {
+	public Base64EncodedImage(String text) {
 
-        this.output = new UncheckedScalar<>(new SolidScalar<>(() -> {
+		this.output = new UncheckedScalar<>(new SolidScalar<>(() -> {
 
-            Matcher matcher = PATTERN.matcher(text);
+			String mimeType;
+			byte[] data;
 
-            String mimeType;
-            byte[] data;
+			if (text != null) {
 
-            if (matcher.matches()) {
-                mimeType = "image/" + matcher.group(1);
-                data = Base64.getMimeDecoder().decode(matcher.group(2));
-            } else {
-                mimeType = "";
-                data = Base64.getMimeDecoder().decode(text);
-            }
+				Matcher matcher = PATTERN.matcher(text);
 
-            return new Base64Encoded(mimeType, data);
-        }));
+				if (matcher.matches()) {
+					mimeType = "image/" + matcher.group(1);
+					data = Base64.getMimeDecoder().decode(matcher.group(2));
+				} else {
+					mimeType = "";
+					data = Base64.getMimeDecoder().decode(text);
+				}
 
-    }
+			} else {
+				mimeType = "image/jpeg";
+				// FIXME use default image here
+				data = new byte[0];
+			}
 
-    @Override
-    public String mimeType() {
-        return output.value().mimeType();
-    }
+			return new Base64Encoded(mimeType, data);
 
-    @Override
-    public byte[] data() {
-        return output.value().data();
-    }
+		}));
 
-    private class Base64Encoded {
+	}
 
-        private final byte[] data;
-        private final String mimeType;
+	@Override
+	public String mimeType() {
+		return output.value().mimeType();
+	}
 
-        public Base64Encoded(String mimeType, byte[] data) {
-            this.mimeType = mimeType;
-            this.data = data;
-        }
+	@Override
+	public byte[] data() {
+		return output.value().data();
+	}
 
-        public String mimeType() {
-            return mimeType;
-        }
+	private class Base64Encoded {
 
-        public byte[] data() {
-            return data;
-        }
+		private final byte[] data;
+		private final String mimeType;
 
-    }
+		public Base64Encoded(String mimeType, byte[] data) {
+			this.mimeType = mimeType;
+			this.data = data;
+		}
+
+		public String mimeType() {
+			return mimeType;
+		}
+
+		public byte[] data() {
+			return data;
+		}
+
+	}
 
 }

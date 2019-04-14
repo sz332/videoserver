@@ -8,7 +8,7 @@ import org.takes.Response;
 import org.takes.Take;
 import org.takes.misc.Href;
 import org.takes.rq.RqHref;
-import org.takes.rs.RsHtml;
+import org.takes.rs.RsJson;
 
 import com.acme.videoserver.core.library.ConstantQuery;
 import com.acme.videoserver.core.library.Library;
@@ -46,7 +46,7 @@ public class TkVideoclips implements Take {
 		try {
 			Result<Videoclip> clips = library.clips(new ConstantQuery(filter, limit, offset));
 			
-			return new RsHtml("<html>hello world</html>"); 
+			return new RsJson(new JsonVideoclipResult(clips));
 			
 		} catch (LibraryAccessException e) {
 			throw new IOException(e);

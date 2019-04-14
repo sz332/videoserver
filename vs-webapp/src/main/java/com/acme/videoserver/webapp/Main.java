@@ -10,10 +10,13 @@ import org.takes.http.Exit;
 import org.takes.http.FtBasic;
 
 import com.acme.video.mediaserver.DefaultMediaServer;
-import com.acme.videoserver.library.common.CachedLibrary;
+import com.acme.videoserver.core.library.Library;
+import com.acme.videoserver.core.mediaserver.MediaServer;
+import com.acme.videoserver.core.storage.Storage;
 import com.acme.videoserver.library.sql.SQLLibrary;
 import com.acme.videoserver.library.sql.h2.H2InMemoryDatasource;
 import com.acme.videoserver.storage.filesystem.FilesystemStorage;
+import com.acme.videoserver.update.PeriodicSynchronization;
 import com.acme.videoserver.webapp.modules.TkVideoclipMedia;
 import com.acme.videoserver.webapp.modules.TkVideoclips;
 
@@ -25,12 +28,20 @@ public class Main {
 		
 		LOGGER.info("Starting application....");
 
+		Storage storage = new FilesystemStorage(new File("E:/temp/videos").toPath());
+		Library library = new SQLLibrary(new H2InMemoryDatasource());
+		MediaServer mediaServer = new DefaultMediaServer(storage);
+		
+		PeriodicSynchronization synch = new PeriodicSynchronization(storage, library, mediaServer);
+		
+		synch.synchronize();
+		
 		new FtBasic(
 				new TkFork(
 						new FkRegex("/", "hello, world!"), 
-						new FkRegex("/videoclips", new TkVideoclips(new CachedLibrary(new SQLLibrary(new H2InMemoryDatasource())))),
+						new FkRegex("/videoclips", new TkVideoclips(library)),
 						new FkRegex("/videoclips/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}/media", 
-								new TkVideoclipMedia(new DefaultMediaServer(new FilesystemStorage(new File("E:/temp/videos").toPath()))))
+								new TkVideoclipMedia(mediaServer))
 					)
 					,
 				8080).start(Exit.NEVER);

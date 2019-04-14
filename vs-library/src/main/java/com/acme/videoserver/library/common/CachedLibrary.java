@@ -53,7 +53,8 @@ public class CachedLibrary implements Library {
 
 	@Override
 	public Result<Videoclip> clips(Query query) throws LibraryAccessException {
-		return null;
+		// FIXME implement cache
+		throw new UnsupportedOperationException("clips query not implemented yet");
 	}
 
 }

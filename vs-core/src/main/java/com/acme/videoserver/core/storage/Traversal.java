@@ -1,10 +1,6 @@
 package com.acme.videoserver.core.storage;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-import com.acme.videoserver.core.storage.RemoteLocation;
-import com.acme.videoserver.core.storage.StorageAccessException;
+import java.util.function.BiConsumer;
 
 public class Traversal {
 
@@ -14,19 +10,18 @@ public class Traversal {
 		this.root = root;
 	}
 
-	public void each(Consumer<RemoteLocation> consumer) throws StorageAccessException {
-		recursiveTraverse(root, consumer);
+	public void each(BiConsumer<RemoteLocation, RemoteLocation> consumer) throws StorageAccessException {
+		recursiveTraverse(root, root, consumer);
 	}
 
-	private void recursiveTraverse(RemoteLocation item, Consumer<RemoteLocation> consumer) throws StorageAccessException {
-		List<RemoteLocation> children = item.children();
+	private void recursiveTraverse(RemoteLocation parent, RemoteLocation item, BiConsumer<RemoteLocation,RemoteLocation> consumer) throws StorageAccessException {
 
-		for (RemoteLocation child : children) {
+		for (RemoteLocation child : item.children()) {
 
 			if (!child.hasChildren()) {
-				consumer.accept(child);
+				consumer.accept(item, child);
 			} else {
-				recursiveTraverse(child, consumer);
+				recursiveTraverse(item, child, consumer);
 			}
 		}
 	}

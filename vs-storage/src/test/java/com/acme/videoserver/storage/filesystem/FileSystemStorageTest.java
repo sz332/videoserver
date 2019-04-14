@@ -32,7 +32,7 @@ public class FileSystemStorageTest {
 
 		Traversal traversal = new Traversal(root);
 
-		traversal.each(remoteLocation -> {
+		traversal.each((parent, remoteLocation) -> {
 			try {
 				System.out.println(remoteLocation.name());
 				System.out.println(remoteLocation.path());

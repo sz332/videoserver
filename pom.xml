@@ -28,6 +28,12 @@
 				<artifactId>cactoos</artifactId>
 				<version>0.40</version>
 			</dependency>
+			
+			<dependency>
+			     <groupId>org.takes</groupId>
+			     <artifactId>takes</artifactId>
+			     <version>1.16</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.jcabi</groupId>

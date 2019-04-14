@@ -37,13 +37,7 @@
 
 		<dependency>
 			<groupId>com.acme</groupId>
-			<artifactId>vs-library</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.acme</groupId>
-			<artifactId>vs-storage</artifactId>
+			<artifactId>vs-mediaserver</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 

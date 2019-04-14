@@ -18,6 +18,7 @@
 		<module>vs-webapp</module>
 		<module>vs-library</module>
 		<module>vs-update</module>
+		<module>vs-mediaserver</module>
 	</modules>
 
 	<dependencyManagement>

@@ -8,6 +8,7 @@ import org.takes.http.Exit;
 import org.takes.http.FtBasic;
 
 import com.acme.video.mediaserver.DefaultMediaServer;
+import com.acme.videoserver.library.common.CachedLibrary;
 import com.acme.videoserver.library.sql.SQLLibrary;
 import com.acme.videoserver.library.sql.h2.H2InMemoryDatasource;
 import com.acme.videoserver.webapp.modules.TkVideoclipMedia;
@@ -24,7 +25,7 @@ public class Main {
 		new FtBasic(
 				new TkFork(
 						new FkRegex("/", "hello, world!"), 
-						new FkRegex("/videoclips", new TkVideoclips(new SQLLibrary(new H2InMemoryDatasource()))),
+						new FkRegex("/videoclips", new TkVideoclips(new CachedLibrary(new SQLLibrary(new H2InMemoryDatasource())))),
 						new FkRegex("/videoclips/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}/media", 
 								new TkVideoclipMedia(new DefaultMediaServer()))
 					)

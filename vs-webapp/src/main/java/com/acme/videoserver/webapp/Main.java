@@ -8,6 +8,8 @@ import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
 import org.takes.http.Exit;
 import org.takes.http.FtBasic;
+import org.takes.tk.TkClasspath;
+import org.takes.tk.TkWithType;
 
 import com.acme.video.mediaserver.DefaultMediaServer;
 import com.acme.videoserver.core.library.Library;
@@ -38,7 +40,9 @@ public class Main {
 		
 		new FtBasic(
 				new TkFork(
-						new FkRegex("/", "hello, world!"), 
+						new FkRegex("/index.html", new TkClasspath("/static")), 
+						new FkRegex("/css/.+", new TkWithType(new TkClasspath("/static"), "text/css")),
+						new FkRegex("/js/.+", new TkWithType(new TkClasspath("/static"), "text/css")),
 						new FkRegex("/videoclips", new TkVideoclips(library)),
 						new FkRegex("/videoclips/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}/media", 
 								new TkVideoclipMedia(mediaServer))

@@ -1,0 +1,31 @@
+<html lang="en-us">
+<head>
+<title>ACMETube</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/mkhplayer.default.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body>
+
+	<h1>ACMETube video player</h1>
+
+	<section class="main-content">
+
+		<video id='video' preload="metadata" width="100%">
+			<source
+				src="http://localhost:8080/videoclips/c1143862-2877-4454-93a9-524650d6787b/media">
+		</video>
+
+		<script type="text/javascript"
+			src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mkhplayer.js"></script>
+		<script type="text/javascript">
+            $(document).ready(function(){
+                $('video').mkhPlayer();
+            });
+        </script>
+
+	</section>
+</body>
+</html>

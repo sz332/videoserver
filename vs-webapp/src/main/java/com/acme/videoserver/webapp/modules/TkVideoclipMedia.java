@@ -13,7 +13,7 @@ import org.takes.rs.RsFluent;
 
 import com.acme.videoserver.core.mediaserver.MediaServer;
 import com.acme.videoserver.core.mediaserver.MediaServerAccessException;
-import com.acme.videoserver.webapp.modules.media.MediaRange;
+import com.acme.videoserver.webapp.modules.media.RsMediaStreamChunk;
 
 // https://tutorial-academy.com/rest-jersey2-resume-video-streaming/
 public class TkVideoclipMedia implements Take {
@@ -38,7 +38,7 @@ public class TkVideoclipMedia implements Take {
 
 			if (matcher.matches()) {
 				String uuid = matcher.group(1);
-				return new MediaRange(mediaServer.stream(uuid), req.head(), 1024 * 1024).asResponse();
+				return new RsMediaStreamChunk(mediaServer.stream(uuid), req.head(), 1024 * 1024).asResponse();
 			}
 
 			return new RsFluent().withStatus(404);

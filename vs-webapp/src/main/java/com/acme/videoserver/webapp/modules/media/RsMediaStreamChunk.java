@@ -5,13 +5,13 @@ import org.takes.Response;
 import com.acme.videoserver.core.mediaserver.MediaServerAccessException;
 import com.acme.videoserver.core.mediaserver.MediaStream;
 
-public class MediaRange {
+public class RsMediaStreamChunk {
 
 	private final MediaStream stream;
 	private final Iterable<String> head;
 	private final int limit;
 
-	public MediaRange(MediaStream stream, Iterable<String> head, int limit) {
+	public RsMediaStreamChunk(MediaStream stream, Iterable<String> head, int limit) {
 		this.stream = stream;
 		this.head = head;
 		this.limit = limit;

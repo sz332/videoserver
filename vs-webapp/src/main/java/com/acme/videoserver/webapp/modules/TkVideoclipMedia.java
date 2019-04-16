@@ -12,9 +12,9 @@ import org.takes.misc.Href;
 import org.takes.rq.RqHref;
 import org.takes.rs.RsFluent;
 
-import com.acme.videoserver.core.mediaserver.MediaChunk;
 import com.acme.videoserver.core.mediaserver.MediaServer;
 import com.acme.videoserver.core.mediaserver.MediaServerAccessException;
+import com.acme.videoserver.core.mediaserver.MediaStream;
 import com.acme.videoserver.core.mediaserver.Range;
 
 // https://tutorial-academy.com/rest-jersey2-resume-video-streaming/
@@ -41,26 +41,14 @@ public class TkVideoclipMedia implements Take {
 			if (matcher.matches()) {
 				String uuid = matcher.group(1);
 
+				MediaStream stream = mediaServer.stream(uuid);
+
 				Optional<Range> range = new LimitedRangeHeader(new RangeHeader(req.head()), 1024 * 1024 ).asRange();
 
 				if (range.isPresent()) {
-
-					MediaChunk chunk = mediaServer.stream(uuid, range.get());
-
-					return new RsFluent().withStatus(206)
-							.withHeader("Content-Range", String.format("bytes %d-%d/%d", chunk.startBytes(), chunk.endBytes(), chunk.totalBytes()))
-							.withHeader("Accept-Ranges", "bytes")
-							.withHeader("Content-Length", String.valueOf(chunk.data().length))
-							.withHeader("Content-Type", chunk.mimeType())
-							.withBody(chunk.data());
+					return stream.chunk(range.get().start(), range.get().end()).asResponse();
 				} else {
-
-					MediaChunk media = mediaServer.stream(uuid);
-
-					return new RsFluent().withStatus(200)
-							.withHeader("Content-Type", media.mimeType())
-							.withHeader("Content-Disposition", "inline; filename=\"output.mp4\"")
-							.withBody(media.data());
+					return stream.chunk(0).asResponse();
 				}
 
 			}

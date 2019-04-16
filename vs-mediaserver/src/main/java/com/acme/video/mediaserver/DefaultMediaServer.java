@@ -14,12 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.acme.videoserver.core.library.Videoclip;
-import com.acme.videoserver.core.mediaserver.ConstantMediaChunk;
-import com.acme.videoserver.core.mediaserver.ConstantRange;
-import com.acme.videoserver.core.mediaserver.MediaChunk;
 import com.acme.videoserver.core.mediaserver.MediaServer;
 import com.acme.videoserver.core.mediaserver.MediaServerAccessException;
-import com.acme.videoserver.core.mediaserver.Range;
+import com.acme.videoserver.core.mediaserver.MediaStream;
 import com.acme.videoserver.core.storage.RemoteLocation;
 import com.acme.videoserver.core.storage.Storage;
 import com.acme.videoserver.core.storage.StorageAccessException;
@@ -49,12 +46,7 @@ public class DefaultMediaServer implements MediaServer {
 	}
 
 	@Override
-	public MediaChunk stream(String mediaId) throws MediaServerAccessException {
-		return stream(mediaId, new ConstantRange(0));
-	}
-
-	@Override
-	public MediaChunk stream(String mediaId, Range range) throws MediaServerAccessException {
+	public MediaStream stream(String mediaId) throws MediaServerAccessException {
 
 		try {
 
@@ -72,31 +64,7 @@ public class DefaultMediaServer implements MediaServer {
 
 			Path localPath = localCopies.get(mediaId);
 
-			byte[] data;
-
-			// handle chunks based on
-			// https://medium.com/@daspinola/video-stream-with-node-js-and-html5-320b3191a6b6
-
-			try (FileInputStream fis = new FileInputStream(localPath.toFile())) {
-
-				int fileSize = (int) localPath.toFile().length();
-
-				int start = range.start();
-				int end = range.openEnded() ? fileSize - 1 : range.end();
-
-				end = Math.min(end, fileSize - 1);
-				
-				int chunkSize = (end - start) + 1;
-				
-				LOGGER.info("Returing file chunk start = {} end = {} chunk = {} total = {}", start, end, chunkSize, fileSize);
-
-				ByteBuffer bytes = ByteBuffer.wrap(new byte[chunkSize]);
-
-				fis.getChannel().read(bytes, start);
-				data = bytes.array();
-
-				return new ConstantMediaChunk(start, end, fileSize, "video/mp4", data);
-			}
+			return new DefaultMediaStream(localPath);
 
 		} catch (StorageAccessException | IOException e) {
 			throw new MediaServerAccessException(e);

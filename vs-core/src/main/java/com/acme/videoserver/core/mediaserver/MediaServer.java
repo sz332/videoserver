@@ -6,8 +6,6 @@ public interface MediaServer {
 
 	void add(Videoclip videoclip, String location);
 	
-    MediaChunk stream(String mediaId) throws MediaServerAccessException;
-    
-    MediaChunk stream(String mediaId, Range range) throws MediaServerAccessException;
+    MediaStream stream(String mediaId) throws MediaServerAccessException;
 
 }

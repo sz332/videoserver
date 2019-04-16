@@ -1,15 +1,7 @@
 package com.acme.videoserver.core.mediaserver;
 
+import org.takes.Response;
+
 public interface MediaChunk {
-
-    String mimeType();
-    
-    int totalBytes();
-    
-    int startBytes();
-    
-    int endBytes();
-
-    byte[] data();
-    
+	Response asResponse() throws MediaServerAccessException;
 }

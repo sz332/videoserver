@@ -43,6 +43,8 @@ public class DefaultMediaStream implements MediaStream {
 
 			int fileSize = (int) localPath.toFile().length();
 
+			// FIXME ugly
+			
 			end = Math.min(end, fileSize - 1);
 
 			int chunkSize = (end - start) + 1;
